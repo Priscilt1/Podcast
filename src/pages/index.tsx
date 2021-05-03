@@ -1,10 +1,14 @@
 import { GetStaticProps } from 'next'; //importando tipagem da função 
+import { format, parseISO } from 'date-fns'; //parseISO converte uma string para um date do js 
+import ptBR from 'date-fns/locale/pt-BR'
 import { api } from '../services/api';
+import { convertDurationToTimeString } from '../utils/convertDurationToTimeString';
 
 type Episode = {
     id: string;
     title: string;
     members: string;
+    published_at: string;
 }
 
 type HomeProps = {
@@ -29,10 +33,25 @@ export const getStaticProps: GetStaticProps = async () => {
       _order: 'desc' //decrescente 
     }
   }) 
-  
+
+  //formatação dos dados antes do return para evitar uma renderização desnecessaria
+  const episodes = data.map(episode => {
+    return {
+      id: episode.id,
+      title: episode.title,
+      thumbnail: episode.thumbnail,
+      members: episode.members,
+      publishedAt: format(parseISO(episode.published_at), 'd MMM yy', { locale: ptBR }), //O MMM significa os tres primeiros digitos do mes 
+      duration: Number(episode.file.duration),
+      durationAsString: convertDurationToTimeString(Number(episode.file.duration)), //convertendo a informacao para numero (usando a funcao que esta nos ultis)
+      description: episode.description,
+      url: episode.file.url,
+  }
+  })
+
   return { 
     props: {
-      episodes: data, 
+      episodes, 
     },
     // revalidate recebe um numero em segundo, avisando em quanto tempo quer uma nova versao da pagina
     revalidate: 60 * 60 * 8 //a cada 8 horas uma nova atualização acontece
