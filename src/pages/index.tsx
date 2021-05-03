@@ -1,4 +1,16 @@
-export default function Home(props) {
+import { GetStaticProps } from 'next'; //importando tipagem da função 
+
+type Episode = {
+    id: string;
+    title: string;
+    members: string;
+}
+
+type HomeProps = {
+  episodes: Episode[]; //informando que é o array com as infos do episode
+}
+
+export default function Home(props: HomeProps) {
   return (
     <div>
       <h1>Index</h1>
@@ -8,7 +20,7 @@ export default function Home(props) {
 }
 
 //SSG - Fica estatico melhorando a performace. 
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async () => {
   const response = await fetch('http://localhost:3333/episodes')
   const data = await response.json()
   
