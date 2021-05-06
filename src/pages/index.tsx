@@ -39,7 +39,9 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                   width={192} //tamanho que a imagem sera carregada (3x maior que sera exibida)
                   height={192}
                   src={episode.thumbnail} 
-                  alt={episode.title}/>
+                  alt={episode.title}
+                  objectFit="cover" //para nao destorcer a imagem
+                />
 
                 <div className={styles.episodeDetails}>
                   <a href="">{episode.title}</a>
