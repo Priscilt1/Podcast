@@ -1,4 +1,5 @@
 import { GetStaticProps } from 'next'; //importando tipagem da função 
+import Image from 'next/image'
 import { format, parseISO } from 'date-fns'; //parseISO converte uma string para um date do js 
 import ptBR from 'date-fns/locale/pt-BR'
 import { api } from '../services/api';
@@ -34,7 +35,11 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
             return (
               // o key é uma informacao unica entre os episodios
               <li key={episode.id}>
-                <img src={episode.thumbnail} alt={episode.title}/>
+                <Image 
+                  width={192} //tamanho que a imagem sera carregada (3x maior que sera exibida)
+                  height={192}
+                  src={episode.thumbnail} 
+                  alt={episode.title}/>
 
                 <div className={styles.episodeDetails}>
                   <a href="">{episode.title}</a>
