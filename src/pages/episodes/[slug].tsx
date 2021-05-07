@@ -61,13 +61,30 @@ export default function Episode({ episode }: EpisodeProps) {
   )
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
- return {
-   paths: [],
+export const getStaticPaths: GetStaticPaths = async () => { //getStaticPaths é obrigatório quando tem rota, usando a geração estática, com parametros dinamicos "[slug]""
+  const { data } = await api.get('episodes', { 
+    params: {
+      _limit: 2,
+      _sort: 'published_at',
+      _order: 'desc'
+    }
+  })
+
+  const paths = data.map(episode => {
+    return {
+      params: {
+        slug: episode.id
+      }
+    }
+  })
+
+  return {
+   paths,
    fallback: 'blocking'
  } 
 }
 
+//getStaticProps = geração estatica
 export const getStaticProps: GetStaticProps = async (ctx) => { //ctx é contexto
   const { slug } = ctx.params
   const { data } = await api.get(`/episodes/${slug}`)
